@@ -1,5 +1,6 @@
 import re
 import csv
+import sys
 
 class Job:
     def __init__(self, company, role, date, status, notes):
@@ -49,8 +50,47 @@ def load_jobs():
     
     return job_list       
                 
+# 5. Add Job:
+def add_job():
+    while True:
+        i_company= input("Company Name:").strip()
+        if len(i_company)<3:
+            print("Enter minimum 3 characters! Try again!")
+            continue
+        else:
+            break
+    
+    while True:
+        i_role= input("Role Applied:")
+        if len(i_role)<2:
+            print("Enter minimum 2 characters! Try again! ")
+            continue
+        else:
+            break
+    
+    while True:
+        i_date= input("Date Applied(yyyy-mm-dd):")
+        if validate_date(i_date):
+            break
+        else:
+            print("Invalid date format!! Try Again!")
+            continue
+
+    while True:
+        i_status= input("Status:")
+        if validate_status(i_status):
+            break
+        else:
+            print("Invalid Status!! Select one from below:\n1. applied\n2. interview\n3. rejected\n4. offer")
+            continue
+                    
+    i_notes= input("Notes: ") or "No notes availabele"
+    job= Job(i_company,i_role,i_date,i_status,i_notes)
+    save_job(job)
+    print(f"Job at {i_company} for {i_role} role successfully added!!")
 
 
+add_job()
 
 '''TEST FUNCTIONS'''
 
