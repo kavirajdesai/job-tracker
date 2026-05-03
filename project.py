@@ -102,7 +102,46 @@ def list_jobs():
         result.append([number] + list(job.to_dict().values()))
 
     return tb(result, headers=["#", "Company", "Role", "Date", "Status", "Notes" ], tablefmt="grid")
-print(list_jobs())
+
+# 7. Show Stats
+def shows_stats():
+    jobs=load_jobs()
+    if len(jobs)<1:
+        print("No job application found!!")
+        return
+    total=0
+    applied=0
+    interview=0
+    offer=0
+    rejected=0
+
+    for job in jobs:
+        if job.status.lower()=="applied":
+            applied+=1
+        elif job.status.lower()=="interview":
+            interview+=1
+        elif job.status.lower()=="offer":
+            offer+=1
+        else:
+            rejected+=1
+        total+=1
+
+    responseratio= ((interview + offer + rejected)/total)*100
+
+    print("-" * 30)
+    print(f"{'| Total Application':<22}: {total}")
+    print(f"{'| Applied':<22}: {applied}")
+    print(f"{'| Interview':<22}: {interview}")
+    print(f"{'| Rejected':<22}: {rejected}")
+    print(f"{'| Offer':<22}: {offer}")
+    print(f"{'| Response Ratio':<22}: {responseratio}%")
+    print("-" * 30)
+    # \nInterview: {interview}\nRejected: {rejected}\nOffer: {offer}\nResponse Ratio: {responseratio:.2f}%")
+
+shows_stats()  
+
+
+
 '''TEST FUNCTIONS'''
 
 # 1. Date Validation:
