@@ -1,6 +1,8 @@
 import re
 import csv
 import sys
+from tabulate import tabulate as tb 
+
 
 class Job:
     def __init__(self, company, role, date, status, notes):
@@ -89,9 +91,18 @@ def add_job():
     save_job(job)
     print(f"Job at {i_company} for {i_role} role successfully added!!")
 
+# 6. List Job:
+def list_jobs():
+    jobs=load_jobs()
+    if len(jobs)<1:
+        print("No job application found!!")
+        return
+    result=[]
+    for number, job in enumerate(jobs, start=1):
+        result.append([number] + list(job.to_dict().values()))
 
-add_job()
-
+    return tb(result, headers=["#", "Company", "Role", "Date", "Status", "Notes" ], tablefmt="grid")
+print(list_jobs())
 '''TEST FUNCTIONS'''
 
 # 1. Date Validation:
