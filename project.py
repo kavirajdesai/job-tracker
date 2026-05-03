@@ -55,7 +55,7 @@ def load_jobs():
 # 5. Add Job:
 def add_job():
     while True:
-        i_company= input("Company Name:").strip().capitalize()
+        i_company= input(f"{'Company Name':<30}: ").strip().capitalize()
         if len(i_company)<3:
             print("Enter minimum 3 characters! Try again!")
             continue
@@ -63,7 +63,7 @@ def add_job():
             break
     
     while True:
-        i_role= input("Role Applied:").capitalize()
+        i_role= input(f"{'Role Applied':<30}: ").capitalize()
         if len(i_role)<2:
             print("Enter minimum 2 characters! Try again! ")
             continue
@@ -71,7 +71,7 @@ def add_job():
             break
     
     while True:
-        i_date= input("Date Applied(yyyy-mm-dd):")
+        i_date= input(f"{'Date Applied(yyyy-mm-dd)':<30}: ")
         if validate_date(i_date):
             break
         else:
@@ -79,14 +79,14 @@ def add_job():
             continue
 
     while True:
-        i_status= input("Status:").capitalize()
+        i_status= input(f"{'Status':<30}: ").capitalize()
         if validate_status(i_status):
             break
         else:
             print("Invalid Status!! Select one from below:\n1. applied\n2. interview\n3. rejected\n4. offer")
             continue
                     
-    i_notes= input("Notes: ") or "No notes availabele".capitalize()
+    i_notes= input(f"{'Notes':<30}: ") or "No notes availabele".capitalize()
     job= Job(i_company,i_role,i_date,i_status,i_notes)
     save_job(job)
     print(f"Job at {i_company} for {i_role} role successfully added!!")
@@ -134,11 +134,10 @@ def shows_stats():
     print(f"{'| Interview':<22}: {interview}")
     print(f"{'| Rejected':<22}: {rejected}")
     print(f"{'| Offer':<22}: {offer}")
-    print(f"{'| Response Ratio':<22}: {responseratio}%")
+    print(f"{'| Response Ratio':<22}: {responseratio:.2f}%")
     print("-" * 30)
-    # \nInterview: {interview}\nRejected: {rejected}\nOffer: {offer}\nResponse Ratio: {responseratio:.2f}%")
 
-# 8. Filter Jobs using keyword
+# 8. Filter Jobs using keyword:
 def filter_job(keyword):
     jobs=load_jobs()
     if len(jobs)<1:
@@ -154,43 +153,30 @@ def filter_job(keyword):
     else:
         return(f"No job application found with keyword {keyword}")
 
-# print(list_jobs())
-# print(filter_job("Microsoft"))    says no application found
-# print(filter_job("Meta"))         says no application found
-# print(filter_job("interview"))   #show all interview status jobs
-# print(filter_job("Analyst"))   # shows all analyst job 
-# print(filter_job("data"))      # shows all data analyst job
-print(filter_job("BI"))
+# 9. Main Function:
+def main():
+    try:
+        if len(sys.argv) < 2:
+            raise ValueError
+        elif len(sys.argv) == 2:
+            if sys.argv[1]=="--add":
+                add_job()
+            elif sys.argv[1]=="--list":
+                print(list_jobs())
+            elif sys.argv[1]=="--stats":
+                shows_stats()
+            else:
+                raise ValueError
+        elif len(sys.argv)==3 and sys.argv[1]=="--filter":
+            print(filter_job(sys.argv[2]))
+        else:
+            raise ValueError
+    
+    except ValueError:
+        sys.exit("Usuage:\n python project.py --add\n python project.py --list\n python project.py --stats\n python project.py --filter <keyword>")
 
 
-'''TEST FUNCTIONS'''
-
-# 1. Date Validation:
-# print(validate_date("2025-05-01"))   # True
-# print(validate_date("01-05-2025"))   # False
-# print(validate_date("abcd-ef-gh"))   # False
-
-
-# 2. Status Validation:
-# print(validate_status("Applied"))    # True
-# print(validate_status("Rejected"))   # True
-# print(validate_status("Maybe"))      # False
-# print(validate_status("applied"))    # True — case insensitive
-
-
-# 3. Save Job:
-# job = Job("Apple", "Data Analyst", "2025-05-01", "Applied", "Handshake")
-# save_job(job)
-
-# 4. Load Jobs:
-# jobs = load_jobs()
-# for job in jobs:
-#     print(job)
-
-
-# if __name__ == "__main__":
-#     job = Job("Google", "Data Analyst", "2025-05-01", "Applied", "LinkedIn")
-#     print(job)
-#     print(job.to_dict())
+if __name__ == "__main__":
+    main()
 
  
