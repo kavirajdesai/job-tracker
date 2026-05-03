@@ -55,7 +55,7 @@ def load_jobs():
 # 5. Add Job:
 def add_job():
     while True:
-        i_company= input("Company Name:").strip()
+        i_company= input("Company Name:").strip().capitalize()
         if len(i_company)<3:
             print("Enter minimum 3 characters! Try again!")
             continue
@@ -63,7 +63,7 @@ def add_job():
             break
     
     while True:
-        i_role= input("Role Applied:")
+        i_role= input("Role Applied:").capitalize()
         if len(i_role)<2:
             print("Enter minimum 2 characters! Try again! ")
             continue
@@ -79,14 +79,14 @@ def add_job():
             continue
 
     while True:
-        i_status= input("Status:")
+        i_status= input("Status:").capitalize()
         if validate_status(i_status):
             break
         else:
             print("Invalid Status!! Select one from below:\n1. applied\n2. interview\n3. rejected\n4. offer")
             continue
                     
-    i_notes= input("Notes: ") or "No notes availabele"
+    i_notes= input("Notes: ") or "No notes availabele".capitalize()
     job= Job(i_company,i_role,i_date,i_status,i_notes)
     save_job(job)
     print(f"Job at {i_company} for {i_role} role successfully added!!")
@@ -138,8 +138,29 @@ def shows_stats():
     print("-" * 30)
     # \nInterview: {interview}\nRejected: {rejected}\nOffer: {offer}\nResponse Ratio: {responseratio:.2f}%")
 
-shows_stats()  
+# 8. Filter Jobs using keyword
+def filter_job(keyword):
+    jobs=load_jobs()
+    if len(jobs)<1:
+        print("No job application found!!")
+        return
+    search_list=[]
+    for job in jobs:
+        if (keyword.lower() in job.company.lower() or keyword.lower() in job.role.lower() or keyword.lower() in job.status.lower()):
+            search_list.append(list(job.to_dict().values()))
+    
+    if len(search_list)>=1:
+        return tb(search_list, headers=["Company", "Role", "Date", "Status", "Notes" ], tablefmt="grid")
+    else:
+        return(f"No job application found with keyword {keyword}")
 
+# print(list_jobs())
+# print(filter_job("Microsoft"))    says no application found
+# print(filter_job("Meta"))         says no application found
+# print(filter_job("interview"))   #show all interview status jobs
+# print(filter_job("Analyst"))   # shows all analyst job 
+# print(filter_job("data"))      # shows all data analyst job
+print(filter_job("BI"))
 
 
 '''TEST FUNCTIONS'''
