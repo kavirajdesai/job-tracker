@@ -1,7 +1,8 @@
 import re
 import csv
 import sys
-from tabulate import tabulate as tb 
+from tabulate import tabulate as tb
+from datetime import datetime as dt 
 
 
 class Job:
@@ -29,7 +30,7 @@ class Job:
 
 # 1. Date Validation:
 def validate_date(date):
-    return bool(re.fullmatch(r"\d{4}-(?P<month>1[0-2]|0[1-9])-(?P<days>0[1-9]|[1-2][0-9]|3[0-1])", date))
+    return bool((re.fullmatch(r"\d{4}-(?P<month>1[0-2]|0[1-9])-(?P<days>0[1-9]|[1-2][0-9]|3[0-1])", date)) and (dt.strptime(date, "%Y-%m-%d") < dt.today()))
 
 # 2. Status Validation:
 def validate_status(status):
@@ -178,5 +179,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
  
