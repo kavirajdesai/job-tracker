@@ -56,47 +56,55 @@ def load_jobs():
 # 5. Add Job:
 def add_job():
     while True:
-        i_company= input(f"{'Company Name':<30}: ").strip().capitalize()
+        print("─" * 65)
+        i_company= input(f"{'Company Name':<45}: ").strip().capitalize()
         if len(i_company)<3:
-            print("Enter minimum 3 characters! Try again!")
+            print("\n⚠️  Enter minimum 3 characters! Try again!")
+            print("─" * 45)
             continue
         else:
             break
     
     while True:
-        i_role= input(f"{'Role Applied':<30}: ").capitalize()
+        i_role= input(f"{'Role Applied':<45}: ").capitalize()
         if len(i_role)<2:
-            print("Enter minimum 2 characters! Try again! ")
+            print("\n⚠️  Enter minimum 2 characters! Try again! ")
+            print("─" * 45)
             continue
         else:
             break
     
     while True:
-        i_date= input(f"{'Date Applied(yyyy-mm-dd)':<30}: ")
+        i_date= input(f"{'Date Applied(yyyy-mm-dd)':<45}: ")
         if validate_date(i_date):
             break
         else:
-            print("Invalid date format!! Try Again!")
+            print("\n⚠️  Invalid date format!! Try Again!")
+            print("─" * 45)
             continue
 
     while True:
-        i_status= input(f"{'Status':<30}: ").capitalize()
+        i_status= input(f"{'Status (applied/interview/offer/rejected)':<45}: ").capitalize()
         if validate_status(i_status):
             break
         else:
-            print("Invalid Status!! Select one from below:\n1. applied\n2. interview\n3. rejected\n4. offer")
+            print("\n⚠️  Invalid Status!! Select one from below:\n1. applied\n2. interview\n3. rejected\n4. offer")
+            print("─" * 45)
             continue
                     
-    i_notes= input(f"{'Notes':<30}: ") or "No notes availabele".capitalize()
+    i_notes= input(f"{'Notes':<45}: ") or "No notes available".capitalize()
     job= Job(i_company,i_role,i_date,i_status,i_notes)
     save_job(job)
-    print(f"Job at {i_company} for {i_role} role successfully added!!")
+    print(f"\n✅  Job at {i_company} for {i_role} role successfully added!!")
+    print("─" * 65)
 
 # 6. List Job:
 def list_jobs():
     jobs=load_jobs()
     if len(jobs)<1:
-        print("No job application found!!")
+        print("-"*45)
+        print("⚠️ No job application found!!")
+        print("-"*45)
         return
     result=[]
     for number, job in enumerate(jobs, start=1):
@@ -108,7 +116,7 @@ def list_jobs():
 def shows_stats():
     jobs=load_jobs()
     if len(jobs)<1:
-        print("No job application found!!")
+        print("⚠️  No job application found!!")
         return
     total=0
     applied=0
@@ -129,20 +137,22 @@ def shows_stats():
 
     responseratio= ((interview + offer + rejected)/total)*100
 
-    print("-" * 30)
+    print("-" * 45)
     print(f"{'| Total Application':<22}: {total}")
     print(f"{'| Applied':<22}: {applied}")
     print(f"{'| Interview':<22}: {interview}")
     print(f"{'| Rejected':<22}: {rejected}")
     print(f"{'| Offer':<22}: {offer}")
     print(f"{'| Response Ratio':<22}: {responseratio:.2f}%")
-    print("-" * 30)
+    print("-" * 45)
 
 # 8. Filter Jobs using keyword:
 def filter_job(keyword):
     jobs=load_jobs()
     if len(jobs)<1:
-        print("No job application found!!")
+        print("-"*45)
+        print("⚠️  No job application found!!")
+        print("-"*45)
         return
     search_list=[]
     for job in jobs:
@@ -152,9 +162,90 @@ def filter_job(keyword):
     if len(search_list)>=1:
         return tb(search_list, headers=["Company", "Role", "Date", "Status", "Notes" ], tablefmt="grid")
     else:
-        return(f"No job application found with keyword {keyword}")
+        return(f"--------------------------------------------------------\n⚠️  No job application found with keyword '{keyword}'\n--------------------------------------------------------")
 
-# 9. Main Function:
+# 9. Update Job Status:
+def update_job():
+    print(list_jobs())
+    jobs=load_jobs()
+    while True:
+        try:
+            job_number= int(input("\nEnter Job Number to Update: "))
+            if job_number < 1 or job_number > len(jobs):
+                raise ValueError
+            break
+        except ValueError:
+            print("\n⚠️  Invalid Input!!\nEnter a number OR Enter number within range.")
+            print("─" * 45)
+            continue
+    
+    while True:
+        try:
+            update= input("What would you like to update? (Status/Notes): ").strip().capitalize()
+            if update in ("Status", "Notes"):
+                break
+            else:
+                raise ValueError
+
+        except ValueError:
+            print("\n⚠️  Invalid Input!!\nChoose Status or Notes.") 
+            print("─" * 45)
+            continue
+    
+    if update== "Status":
+        while True:
+            new_value= input("New Status (applied/interview/offer/rejected): ").strip().capitalize()
+            if validate_status(new_value):
+                break
+            else:
+                print("\n⚠️  Invalid Status!!")
+                print("─" * 45)
+                continue
+
+    elif update == "Notes":
+        while True:
+            new_value = input("New Notes: ").strip().capitalize()
+            if len(new_value) > 0:
+                break
+            else:
+                print("\n⚠️  Notes cannot be empty!")
+                print("─" * 45)
+
+    setattr(jobs[job_number - 1], update.lower(), new_value)
+
+    with open("application.csv", "w", newline="") as file:
+        writer= csv.DictWriter(file, fieldnames=["company", "role", "date", "status", "notes"])
+        writer.writeheader()
+
+        for job in jobs:
+            writer.writerow(job.to_dict())
+    print(f"\n✅  {update} updated successfully!")
+    print("─" * 45)
+
+
+    while True:
+        try:
+            result= input("Press 'p' for listing jobs OR Press 'q' to exit: ").lower()
+            if result== "p":
+                print(list_jobs())
+                break
+            elif result== "q":
+                sys.exit()
+            else:
+                raise ValueError
+        except ValueError:
+            print("\n⚠️  Press 'p' or 'q'")
+            print("─" * 45)
+            continue
+    
+            
+
+
+    
+
+
+
+# 10. Main Function:
 def main():
     try:
         if len(sys.argv) < 2:
@@ -166,6 +257,8 @@ def main():
                 print(list_jobs())
             elif sys.argv[1]=="--stats":
                 shows_stats()
+            elif sys.argv[1]=="--update":
+                update_job()
             else:
                 raise ValueError
         elif len(sys.argv)==3 and sys.argv[1]=="--filter":
@@ -174,7 +267,7 @@ def main():
             raise ValueError
     
     except ValueError:
-        sys.exit("Usuage:\n python project.py --add\n python project.py --list\n python project.py --stats\n python project.py --filter <keyword>")
+        sys.exit("\n-----------------------------------------------------------------------------------------\nUsuage:\n python project.py --add\n python project.py --list\n python project.py --stats\n python project.py --filter <keyword>\n python project.py --update\n-----------------------------------------------------------------------------------------\n")
 
 
 if __name__ == "__main__":
