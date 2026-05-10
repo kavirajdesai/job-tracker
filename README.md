@@ -1,6 +1,6 @@
 # 📋 Job Application Tracker CLI
 
-> Built with Python · CS50P Final Project
+> Built with Python 
 
 During my job search after completing my Master's in Computer Science,
 I needed a simple way to track every application I was sending out daily.
@@ -13,7 +13,7 @@ ground up while creating something I actually use every day.
 
 ---
 
-## 🚀 Features
+## Features
 
 - Add new job applications with full input validation
 - List all applications in a clean formatted table
@@ -26,7 +26,7 @@ ground up while creating something I actually use every day.
 
 ---
 
-## 📦 Requirements
+## Requirements
 
 - Python 3.10 or higher
 - tabulate
@@ -89,9 +89,9 @@ performing over time.
 python project.py --filter <keyword>
 Search across company name, role, and status simultaneously. Returns
 all matching entries in a clean table. Works with partial matches —
-searching "analyst" returns all analyst roles regardless of company.
+searching "business" returns all business roles regardless of company.
 
-![Filter Results](screenshots/--filter business.jpg)
+![Filter Results](screenshots/--filter.jpg)
 
 ---
 
@@ -152,6 +152,7 @@ pytest test_project.py -v
 
 The feature I want to build next is a **per-company activity timeline** —
 logging every interaction with a company in chronological order:
+```
 Company: Google | Role: Data Analyst
 ─────────────────────────────────────────────────
 📅 2025-04-20   Applied via LinkedIn
@@ -159,6 +160,7 @@ Company: Google | Role: Data Analyst
 📅 2025-05-02   Phone interview scheduled
 📅 2025-05-08   Final round completed
 ─────────────────────────────────────────────────
+```
 
 This would replace the single Notes field with a full timestamped log,
 making it much easier to track where each application actually stands
@@ -167,14 +169,14 @@ and what the next action should be.
 ---
 
 ## 📁 Project Structure
+```
 job-tracker/
 ├── project.py          # Main application
 ├── test_project.py     # 14 pytest unit tests
-├── requirements.txt    # Project dependencies
 ├── application.csv     # Auto-created on first run
 ├── screenshots/        # Terminal output screenshots
 └── README.md
-
+```
 ---
 
 ## 🛠️ Built With
